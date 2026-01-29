@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ARGOS CORE - Panel de Control</title>
+    <meta charset="UTF-8">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #050a18; color: white; text-align: center; }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        .alerta { background: #0d1425; border: 1px solid #3b82f6; padding: 15px; margin: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn { background: #3b82f6; color: white; padding: 10px; border-radius: 5px; text-decoration: none; }
+        h1 { color: #00e5ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ARGOS CORE - Dashboard</h1>
+        <div id="lista-alertas">Cargando alertas...</div>
+    </div>
+
+    <script>
+        // TU CONFIGURACIÓN DE UNA SOLA VEZ
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMwTWTsGydcUwsxqr5V3Jj2uYKqILE_d0",
+            databaseURL: "https://argos-core-662a0-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database().ref('alertas');
+
+        // LEER DATOS AUTOMÁTICAMENTE
+        db.on('value', (snapshot) => {
+            const lista = document.getElementById('lista-alertas');
+            lista.innerHTML = '';
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                lista.innerHTML += `
+                    <div class="alerta">
+                        <span><b>📅 Fecha:</b> ${data.fecha}</span>
+                        <a href="${data.url}" target="_blank" class="btn">▶ Ver Video</a>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
